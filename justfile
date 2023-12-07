@@ -1,4 +1,10 @@
-set shell := ["bash", "-cu"]
+# Throughout the file, you'll see a lot of this:
+#
+# {{ if day =~ '^\d{1}$' { "0" + day } else { day } }}
+#
+# All of these instances could be replaced with {{day}}. That said, I kept forgetting to left-pad the single digit
+# days, and this solves that. The advantage of doing this is that just will actually calculate the day before printing
+# it. I am not currently aware of a way in just to separate that into its own function, so duplicated it will remain.
 
 [private]
 default: help

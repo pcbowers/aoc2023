@@ -17,16 +17,24 @@ Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.
 
 ## Benchmarks
 
-See benchmarks [here](./benchmarks.txt)
+See benchmarks [here](./benchmarks.txt). Benchmarks are run ad-hoc without closing everything else. All benchmarks are run in WSL (Ubuntu 22.04.3 LTS) on my Windows PC (13th Gen Intel Core i9-13900K 16-Core Processor with 32GB Memory).
 
 ## Usage
 
-Uses the following command line tools (all can be installed via cargo)
-- [rustfmt](https://github.com/rust-lang/rustfmt)
-- [clippy](https://github.com/rust-lang/rust-clippy)
-- [nextest](https://github.com/nextest-rs/nextest)
-- [cargo-generate](https://github.com/cargo-generate/cargo-generate)
-- [just](https://github.com/casey/just)
-- [aoc-cli](https://github.com/scarvalhojr/aoc-cli)
+I use the following command line tools (all can be installed via cargo):
 
-For a list of commands, run `just help`.
+* [rustfmt](https://github.com/rust-lang/rustfmt)
+* [clippy](https://github.com/rust-lang/rust-clippy)
+* [nextest](https://github.com/nextest-rs/nextest)
+* [cargo-generate](https://github.com/cargo-generate/cargo-generate)
+* [just](https://github.com/casey/just)
+* [aoc-cli](https://github.com/scarvalhojr/aoc-cli)
+
+To install them all, run:
+
+```
+rustup component add rustfmt clippy
+cargo install nextest cargo-generate just aoc-cli
+```
+
+Instead of remembering all the commands that need to be run, I've set up a [`justfile`](./justfile). For a list of the predefined commands, run `just help`. All commands used from linting to benchmarking are available through the just runner.

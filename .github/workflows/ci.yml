@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     name: CI
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Set up cargo cache
         uses: actions/cache@v3
         continue-on-error: false
@@ -23,6 +24,8 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
+      - name: cargo check
+        run: cargo check
       - name: cargo test
         run: cargo test
       - name: cargo clippy
