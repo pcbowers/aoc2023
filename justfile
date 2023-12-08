@@ -54,9 +54,14 @@ lint day:
 format day:
     cargo fmt -p day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }}
 
-# Run the benchmarks for the given day and part (part is optional)
+# Run the benchmarks and puts them in a file corresponding to the given day (part is optional)
 bench day part=" ":
+    cargo bench -q --bench day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }}-bench part{{part}} 2> /dev/null >> day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }}.bench.txt
+
+# Same as bench, but verbose. Logs to stderr/stdout as well as saving to a file
+bench-v day part=" ":
     cargo bench --bench day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }}-bench part{{part}} | tee -a day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }}.bench.txt
+
 
 # Run the criterion benchmarks for the given day and part (part is optional)
 bench-criterion day part=" ":
@@ -69,3 +74,7 @@ bench-all:
 # Watch the files for a given day, linting, testing, and benchmarking as you go
 work day part=" ":
     cargo watch -w day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }} -x "check -p day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }}" -s "just test {{ if day =~ '^\d{1}$' { "0" + day } else { day } }} {{part}}" -s "just lint {{ if day =~ '^\d{1}$' { "0" + day } else { day } }}" -s "just bench {{ if day =~ '^\d{1}$' { "0" + day } else { day } }} {{part}}"
+
+# Same as work, but verbose. Uses the verbose bench recipe
+work-v day part=" ":
+    cargo watch -w day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }} -x "check -p day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }}" -s "just test {{ if day =~ '^\d{1}$' { "0" + day } else { day } }} {{part}}" -s "just lint {{ if day =~ '^\d{1}$' { "0" + day } else { day } }}" -s "just bench-v {{ if day =~ '^\d{1}$' { "0" + day } else { day } }} {{part}}"
