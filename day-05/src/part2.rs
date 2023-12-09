@@ -7,7 +7,6 @@ use nom::{
     sequence::{preceded, separated_pair, terminated, tuple},
     IResult,
 };
-use rayon::prelude::*;
 use std::ops::Range;
 
 type RangeMappings<'a> = IResult<&'a str, Vec<(Range<u64>, Range<u64>)>>;
@@ -75,25 +74,59 @@ impl SeedMapping {
 
 pub fn process(input: &str) -> String {
     let (_, (seeds, mappings)) = SeedMapping::parse(input).unwrap();
-    let seed_groups = seeds
+
+    seeds
         .iter()
         .tuples()
-        .flat_map(|(&seed, &length)| seed..(seed + length))
-        .collect_vec();
+        .map(|(&seed, &length)| seed..(seed + length))
+        // Each seed range will be broken down into smaller and smaller ranges until it represents location ranges
+        .flat_map(|seed_range| {
+            mappings.iter().fold(vec![seed_range], |ranges, mapping| {
+                ranges.iter().fold(Vec::new(), |mut new_ranges, range| {
+                    // We'll use this later when filling in the gaps
+                    let mut curr_start = range.start;
 
-    seed_groups
-        .par_iter()
-        .map(|&seed| {
-            mappings.iter().fold(seed, |cur_seed, mapping| {
-                for map in mapping.maps.iter() {
-                    if cur_seed >= map.1.start && cur_seed < map.1.end {
-                        return (cur_seed - map.1.start) + map.0.start;
+                    mapping
+                        .maps
+                        .iter()
+                        // Replace each mapping with the range that overlaps, if it exists
+                        .filter_map(|map| {
+                            let start = map.1.start.clamp(range.start, range.end);
+                            let end = map.1.end.clamp(range.start, range.end);
+
+                            if start != end {
+                                // Save the new range slice
+                                new_ranges.push(Range {
+                                    start: start + map.0.start - map.1.start,
+                                    end: end + map.0.end - map.1.end,
+                                });
+                                // Return the original range instead of the new one so that we can calculate the gaps
+                                Some(start..end)
+                            } else {
+                                None
+                            }
+                        })
+                        // Sort the original ranges so we can just look at the start of each range
+                        .sorted_by(|a, b| a.start.partial_cmp(&b.start).unwrap())
+                        // Loop over the range slices, filling in the gaps as necessary
+                        .for_each(|range_slice| {
+                            if curr_start < range_slice.start {
+                                new_ranges.push(curr_start..range_slice.start);
+                            }
+                            curr_start = range_slice.end;
+                        });
+
+                    // Ensure the last gap is filled if the last range slice was smaller than the original range
+                    if curr_start < range.end {
+                        new_ranges.push(curr_start..range.end);
                     }
-                }
 
-                cur_seed
+                    new_ranges
+                })
             })
         })
+        // Extracts the lowest value from each range, the start value
+        .map(|range| range.start)
         .min()
         .unwrap()
         .to_string()

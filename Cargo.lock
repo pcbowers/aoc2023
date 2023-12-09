@@ -230,7 +230,6 @@ dependencies = [
  "divan",
  "itertools 0.12.0",
  "nom",
- "rayon",
 ]
 
 [[package]]
