@@ -1,0 +1,25 @@
+[package]
+name = "day-08"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+itertools.workspace = true
+nom.workspace = true
+rayon.workspace = true
+num.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+divan.workspace = true
+
+[[bench]]
+name = "day-08-bench"
+path = "benches/benchmarks.rs"
+harness = false
+
+[[bench]]
+name = "day-08-bench-criterion"
+path = "benches/benchmarks-criterion.rs"
+bench = false
+harness = false
