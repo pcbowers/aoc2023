@@ -12,4 +12,5 @@ divan = "0.1.5"
 regex = "1.10.2"
 roots = "0.0.8"
 num = "0.4.1"
+grid = "0.12.0"
 criterion = { version = "0.5.1", features = ["html_reports"] }
