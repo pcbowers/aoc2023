@@ -44,7 +44,7 @@ submit day part answer:
 
 # Run the tests for a given day and part (part is optional)
 test day part=" ":
-    cargo nextest run -p day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }} part{{part}}
+    cargo nextest run -p day-{{ if day =~ '^\d{1}$' { "0" + day } else { day } }} part{{part}} --nocapture
 
 # Lint the code for a given day
 lint day:
@@ -69,7 +69,7 @@ bench-criterion day part=" ":
 
 # Run all the benchmarks
 bench-all:
-    cargo bench -q > benchmarks.txt
+    cargo bench --quiet | rg --multiline "(?s)day.*?part2.*?\n\n" | tee benchmarks.txt
 
 # Watch the files for a given day, linting, testing, and benchmarking as you go
 work day part=" ":

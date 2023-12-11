@@ -71,13 +71,15 @@ pub fn parse(input: &str) -> Grid<GridCell> {
 
 pub fn print_grid(grid: &Grid<GridCell>, grid_cell_converter: fn(&GridCell) -> String) {
     grid.iter_rows().for_each(|row| {
-        println!("{}", row.map(grid_cell_converter).join(""));
+        let row = row.map(grid_cell_converter).join("");
+        dbg!(row);
     });
 }
 
 pub fn print_big_grid(big_grid: &Grid<char>) {
     big_grid.iter_rows().for_each(|row| {
-        println!("{}", row.copied().join(""));
+        let row = row.copied().join("");
+        dbg!(row);
     })
 }
 

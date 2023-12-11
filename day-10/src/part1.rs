@@ -71,7 +71,8 @@ pub fn parse(input: &str) -> Grid<GridCell> {
 
 pub fn print_grid(grid: &Grid<GridCell>, grid_cell_converter: fn(&GridCell) -> String) {
     grid.iter_rows().for_each(|row| {
-        println!("{}", row.map(grid_cell_converter).join(""));
+        let row = row.map(grid_cell_converter).join("");
+        dbg!(row);
     });
 }
 
