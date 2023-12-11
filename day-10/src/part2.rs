@@ -213,92 +213,51 @@ pub fn process(input: &str) -> String {
 
     // print_grid(&grid, GridCell::as_pretty_name);
 
-    let mut big_grid = Grid::new(grid.rows() * 3, grid.cols() * 3);
-
-    let the_loop = get_the_loop(&grid);
-
     let loop_char = '#';
     let outside_char = '.';
     let flood_char = 'o';
+
+    let mut big_grid = Grid::new(grid.rows() * 3, grid.cols() * 3);
+    big_grid.fill(outside_char);
+
+    let the_loop = get_the_loop(&grid);
 
     the_loop.iter().for_each(|cell| {
         let row = cell.row * 3;
         let col = cell.col * 3;
         match calculate_name(cell, &the_loop) {
             '|' => {
-                *big_grid.get_mut(row, col).unwrap() = outside_char;
                 *big_grid.get_mut(row, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row, col + 2).unwrap() = outside_char;
-                *big_grid.get_mut(row + 1, col).unwrap() = outside_char;
                 *big_grid.get_mut(row + 1, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row + 1, col + 2).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col).unwrap() = outside_char;
                 *big_grid.get_mut(row + 2, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row + 2, col + 2).unwrap() = outside_char;
             }
             '-' => {
-                *big_grid.get_mut(row, col).unwrap() = outside_char;
-                *big_grid.get_mut(row, col + 1).unwrap() = outside_char;
-                *big_grid.get_mut(row, col + 2).unwrap() = outside_char;
                 *big_grid.get_mut(row + 1, col).unwrap() = loop_char;
                 *big_grid.get_mut(row + 1, col + 1).unwrap() = loop_char;
                 *big_grid.get_mut(row + 1, col + 2).unwrap() = loop_char;
-                *big_grid.get_mut(row + 2, col).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col + 1).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col + 2).unwrap() = outside_char;
             }
             'L' => {
-                *big_grid.get_mut(row, col).unwrap() = outside_char;
                 *big_grid.get_mut(row, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row, col + 2).unwrap() = outside_char;
-                *big_grid.get_mut(row + 1, col).unwrap() = outside_char;
                 *big_grid.get_mut(row + 1, col + 1).unwrap() = loop_char;
                 *big_grid.get_mut(row + 1, col + 2).unwrap() = loop_char;
-                *big_grid.get_mut(row + 2, col).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col + 1).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col + 2).unwrap() = outside_char;
             }
             'J' => {
-                *big_grid.get_mut(row, col).unwrap() = outside_char;
                 *big_grid.get_mut(row, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row, col + 2).unwrap() = outside_char;
                 *big_grid.get_mut(row + 1, col).unwrap() = loop_char;
                 *big_grid.get_mut(row + 1, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row + 1, col + 2).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col + 1).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col + 2).unwrap() = outside_char;
             }
             '7' => {
-                *big_grid.get_mut(row, col).unwrap() = outside_char;
-                *big_grid.get_mut(row, col + 1).unwrap() = outside_char;
-                *big_grid.get_mut(row, col + 2).unwrap() = outside_char;
                 *big_grid.get_mut(row + 1, col).unwrap() = loop_char;
                 *big_grid.get_mut(row + 1, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row + 1, col + 2).unwrap() = outside_char;
-                *big_grid.get_mut(row + 2, col).unwrap() = outside_char;
                 *big_grid.get_mut(row + 2, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row + 2, col + 2).unwrap() = outside_char;
             }
             'F' => {
-                *big_grid.get_mut(row, col).unwrap() = outside_char;
-                *big_grid.get_mut(row, col + 1).unwrap() = outside_char;
-                *big_grid.get_mut(row, col + 2).unwrap() = outside_char;
-                *big_grid.get_mut(row + 1, col).unwrap() = outside_char;
                 *big_grid.get_mut(row + 1, col + 1).unwrap() = loop_char;
                 *big_grid.get_mut(row + 1, col + 2).unwrap() = loop_char;
-                *big_grid.get_mut(row + 2, col).unwrap() = outside_char;
                 *big_grid.get_mut(row + 2, col + 1).unwrap() = loop_char;
-                *big_grid.get_mut(row + 2, col + 2).unwrap() = outside_char;
             }
             _ => unreachable!("Must match one of these characters"),
         };
-    });
-
-    big_grid.iter_mut().for_each(|cell| {
-        if *cell == char::default() {
-            *cell = outside_char;
-        }
     });
 
     let mut cells_to_visit = LinkedList::from([(0, 0)]);
