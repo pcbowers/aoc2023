@@ -5,7 +5,7 @@ fn main() {
     divan::main();
 }
 
-#[divan::bench]
+#[divan::bench(max_time = 100)]
 fn part1() {
     part1::process(divan::black_box(include_str!("../data/input.txt",)));
 }
