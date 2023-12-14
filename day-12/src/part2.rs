@@ -1,8 +1,10 @@
+use std::collections::HashMap;
+
 use indicatif::ProgressIterator;
 use itertools::Itertools;
 use rayon::iter::{ParallelBridge, ParallelIterator};
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 enum Spring {
     Operational,
     Damaged,
@@ -74,12 +76,35 @@ pub fn process(input: &str) -> String {
                 )
             })
         })
-        .map(|(springs, groups)| count_arrangements(&springs, &groups, 0))
+        .map(|(springs, groups)| {
+            let mut cache = HashMap::new();
+            arrangements_memoized(&springs, &groups, 0, &mut cache)
+        })
         .sum::<usize>()
         .to_string()
 }
 
-fn count_arrangements(springs: &[Spring], groups: &[usize], count: usize) -> usize {
+fn arrangements_memoized(
+    springs: &[Spring],
+    groups: &[usize],
+    count: usize,
+    cache: &mut HashMap<(Vec<Spring>, Vec<usize>, usize), usize>,
+) -> usize {
+    if let Some(result) = cache.get(&(springs.to_vec(), groups.to_vec(), count)) {
+        return *result;
+    }
+
+    let result = arrangements(springs, groups, count, cache);
+    cache.insert((springs.to_vec(), groups.to_vec(), count), result);
+    result
+}
+
+fn arrangements(
+    springs: &[Spring],
+    groups: &[usize],
+    count: usize,
+    cache: &mut HashMap<(Vec<Spring>, Vec<usize>, usize), usize>,
+) -> usize {
     use DamagedGroup::*;
     use Spring::*;
 
@@ -108,21 +133,21 @@ fn count_arrangements(springs: &[Spring], groups: &[usize], count: usize) -> usi
 
     // We can safely unwrap since we've already done a check for `is_empty`
     match (springs.iter().next().unwrap(), current_state) {
-        (Operational, Exhausted) => count_arrangements(&springs[1..], groups, count),
-        (Operational, NotStarted) => count_arrangements(&springs[1..], groups, count),
+        (Operational, Exhausted) => arrangements_memoized(&springs[1..], groups, count, cache),
+        (Operational, NotStarted) => arrangements_memoized(&springs[1..], groups, count, cache),
         (Operational, NotFilled) => 0,
-        (Operational, Filled) => count_arrangements(&springs[1..], &groups[1..], 0),
+        (Operational, Filled) => arrangements_memoized(&springs[1..], &groups[1..], 0, cache),
         (Damaged, Exhausted) => 0,
-        (Damaged, NotStarted) => count_arrangements(&springs[1..], groups, count + 1),
-        (Damaged, NotFilled) => count_arrangements(&springs[1..], groups, count + 1),
+        (Damaged, NotStarted) => arrangements_memoized(&springs[1..], groups, count + 1, cache),
+        (Damaged, NotFilled) => arrangements_memoized(&springs[1..], groups, count + 1, cache),
         (Damaged, Filled) => 0,
-        (Unknown, Exhausted) => count_arrangements(&springs[1..], groups, count),
+        (Unknown, Exhausted) => arrangements_memoized(&springs[1..], groups, count, cache),
         (Unknown, NotStarted) => {
-            count_arrangements(&springs[1..], groups, count + 1)
-                + count_arrangements(&springs[1..], groups, count)
+            arrangements_memoized(&springs[1..], groups, count + 1, cache)
+                + arrangements_memoized(&springs[1..], groups, count, cache)
         }
-        (Unknown, NotFilled) => count_arrangements(&springs[1..], groups, count + 1),
-        (Unknown, Filled) => count_arrangements(&springs[1..], &groups[1..], 0),
+        (Unknown, NotFilled) => arrangements_memoized(&springs[1..], groups, count + 1, cache),
+        (Unknown, Filled) => arrangements_memoized(&springs[1..], &groups[1..], 0, cache),
         _ => unreachable!("Must match one of these state combinations"),
     }
 }
