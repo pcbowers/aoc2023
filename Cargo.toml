@@ -14,4 +14,5 @@ roots = "0.0.8"
 num = "0.4.1"
 grid = "0.12.0"
 indicatif = "0.17.7"
+cached = "0.46.1"
 criterion = { version = "0.5.1", features = ["html_reports"] }

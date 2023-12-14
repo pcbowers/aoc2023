@@ -8,6 +8,7 @@ itertools.workspace = true
 nom.workspace = true
 rayon.workspace = true
 indicatif.workspace = true
+cached.workspace = true
 
 [dev-dependencies]
 criterion.workspace = true
