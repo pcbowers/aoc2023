@@ -1,4 +1,4 @@
-use cached::proc_macro::cached;
+use cached::{proc_macro::cached, Cached};
 use indicatif::ProgressIterator;
 use itertools::Itertools;
 use rayon::iter::{ParallelBridge, ParallelIterator};
@@ -54,7 +54,7 @@ impl DamagedGroup {
 }
 
 pub fn process(input: &str) -> String {
-    input
+    let result = input
         .lines()
         .progress_count(input.lines().count() as u64)
         .par_bridge()
@@ -71,7 +71,11 @@ pub fn process(input: &str) -> String {
         })
         .map(|(springs, groups)| arrangements(&springs, &groups, 0))
         .sum::<usize>()
-        .to_string()
+        .to_string();
+
+    ARRANGEMENTS.lock().expect("Must have cache").cache_clear();
+
+    result
 }
 
 #[cached(

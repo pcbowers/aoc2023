@@ -1,0 +1,25 @@
+[package]
+name = "day-14"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+itertools.workspace = true
+nom.workspace = true
+grid.workspace = true
+cached.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+divan.workspace = true
+
+[[bench]]
+name = "day-14-bench"
+path = "benches/benchmarks.rs"
+harness = false
+
+[[bench]]
+name = "day-14-bench-criterion"
+path = "benches/benchmarks-criterion.rs"
+bench = false
+harness = false
