@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 
-members = ["day-*"]
+members = ["day-*", "helpers"]
 default-members = ["day-*"]
 
 [workspace.dependencies]
@@ -16,4 +16,5 @@ grid = "0.12.0"
 indicatif = "0.17.7"
 cached = "0.46.1"
 indexmap = "2.1.0"
+helpers = { path = "helpers" }
 criterion = { version = "0.5.1", features = ["html_reports"] }
