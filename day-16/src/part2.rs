@@ -10,11 +10,11 @@ trait GetChecked<T> {
 
 impl<T> GetChecked<T> for Grid<T> {
     fn get_checked(&self, point: Point) -> Option<&T> {
-        self.get(point.0.try_into().ok()?, point.1.try_into().ok()?)
+        self.get(point.0, point.1)
     }
 
     fn get_checked_mut(&mut self, point: Point) -> Option<&mut T> {
-        self.get_mut(point.0.try_into().ok()?, point.1.try_into().ok()?)
+        self.get_mut(point.0, point.1)
     }
 }
 
