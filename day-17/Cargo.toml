@@ -1,24 +1,25 @@
 [package]
-name = "{{project-name}}"
+name = "day-17"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 itertools.workspace = true
 nom.workspace = true
-helpers.workspace = true
+grid.workspace = true
+pathfinding.workspace = true
 
 [dev-dependencies]
 criterion.workspace = true
 divan.workspace = true
 
 [[bench]]
-name = "{{project-name}}-bench"
+name = "day-17-bench"
 path = "benches/benchmarks.rs"
 harness = false
 
 [[bench]]
-name = "{{project-name}}-bench-criterion"
+name = "day-17-bench-criterion"
 path = "benches/benchmarks-criterion.rs"
 bench = false
 harness = false
