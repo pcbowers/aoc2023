@@ -107,6 +107,8 @@ pub fn process(input: &str) -> String {
 
     let end_point = (grid.rows() as isize - 1, grid.cols() as isize - 1);
 
+    // See https://www.redblobgames.com/pathfinding/a-star/introduction.html
+    // This is how I discovered and understood using the astar algorithm
     if let Some((_, min_heat)) = astar(
         &Vector {
             point: (0, 0),
