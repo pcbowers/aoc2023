@@ -54,7 +54,7 @@ pub fn process(input: &str) -> String {
     let perimeter = dig_plan.iter().map(|(_, meters)| meters).sum::<isize>();
 
     // See https://en.wikipedia.org/wiki/Shoelace_formula
-    // Calculates Area via Shoelace Formula
+    // Calculates area via Shoelace Formula
     let absolute_area = dig_path
         .iter()
         .tuple_windows()
