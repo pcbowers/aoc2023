@@ -29,7 +29,7 @@ Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.
 
 ## Benchmarks
 
-See benchmarks [here](./benchmarks.txt). Benchmarks are run ad-hoc without closing everything else. All benchmarks are run in WSL (Ubuntu 22.04.3 LTS) on my Windows PC (13th Gen Intel Core i9-13900K 16-Core Processor with 32GB Memory).
+See benchmarks [here](./benchmarks.txt). Benchmarks are run ad-hoc without closing everything else. All benchmarks are run in WSL (Ubuntu 22.04.3 LTS) on my Windows PC (13th Gen Intel Core i9-13900K 32-Core Processor with 32GB Memory).
 
 ## Usage
 
