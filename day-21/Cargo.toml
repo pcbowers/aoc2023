@@ -8,7 +8,6 @@ itertools.workspace = true
 nom.workspace = true
 helpers.workspace = true
 grid.workspace = true
-cached.workspace = true
 
 [dev-dependencies]
 criterion.workspace = true
