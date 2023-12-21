@@ -124,7 +124,7 @@ mod parser {
 Writing this comment as I go, I think the problem may be similar to day 08:
 
 - I ran this for a good long while (15ish minutes) and it never finished
-- Looking at the numbers using 100,000,000 loops: 4-28 highs and 0 lows
+- Looking at the numbers it receives using 100,000,000 loops: 4-28 highs and 0 lows
 - Apparently, I don't need to worry about multiple lows, just getting a single one would be nice
 
 - I had no idea where to go next though, so I began to debug
@@ -136,9 +136,9 @@ Writing this comment as I go, I think the problem may be similar to day 08:
 - Interestingly ss, fz, mf, and fh are all conjunctions so they need to *not* receive all highs
 - Also, each only has one item that feeds into it: lr, tf, hl, and sn respectively
 - That means, ss, fz, mf, and fh just do the opposite of lr, tf, hl, and sn
-- Thus, when ss, fz, mf, and fh all receive lows, we should get all highs, which is what ql needs
+- Thus, when ss, fz, mf, and fh all receive lows, we should get all highs, which is what we want
 
-- Now, I decided to see how often ss spits out a low pulse
+- Now, I decided to see how often ss receives a low pulse
 - I got 3881, 7762, 11643, 15524, 19405, 23286 ... all exactly 3881 apart
 - For fz: 3793, 7586, 11379 ... all exactly 3793 apart
 - For mf: 3761, 7522, 11283 ... all exactly 3761 apart
@@ -146,7 +146,7 @@ Writing this comment as I go, I think the problem may be similar to day 08:
 - Clearly, they loop exactly that many times, so it's probably LCM
 - Just to see, I tried it with 212986464842911 (the LCM of those 4). It worked!
 
-Please enjoy the stream of consciousness above.I wanted to make a solution that could calculate it
+Please enjoy the stream of consciousness above. I wanted to make a solution that could calculate it
 generally, but couldn't come up with a way. I think that's the point of today, so instead, I
 created a solution that makes these assumptions:
 
