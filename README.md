@@ -50,7 +50,7 @@ To install them all, run:
 
 ```
 rustup component add rustfmt clippy
-cargo install cargo-watch nextest cargo-generate just aoc-cli
+cargo install cargo-watch cargo-nextest cargo-generate just aoc-cli
 ```
 
 Instead of remembering all the commands that need to be run, I've set up a [`justfile`](./justfile). For a list of the predefined commands, run `just help`. All commands used from linting to benchmarking are available through the just runner.
