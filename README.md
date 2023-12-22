@@ -38,6 +38,7 @@ See benchmarks [here](./benchmarks.txt). Benchmarks are run ad-hoc without closi
 
 I use the following command line tools (all can be installed via cargo):
 
+* [cargo-watch](https://github.com/watchexec/cargo-watch)
 * [rustfmt](https://github.com/rust-lang/rustfmt)
 * [clippy](https://github.com/rust-lang/rust-clippy)
 * [nextest](https://github.com/nextest-rs/nextest)
@@ -49,7 +50,7 @@ To install them all, run:
 
 ```
 rustup component add rustfmt clippy
-cargo install nextest cargo-generate just aoc-cli
+cargo install cargo-watch nextest cargo-generate just aoc-cli
 ```
 
 Instead of remembering all the commands that need to be run, I've set up a [`justfile`](./justfile). For a list of the predefined commands, run `just help`. All commands used from linting to benchmarking are available through the just runner.
