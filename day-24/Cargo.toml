@@ -7,7 +7,7 @@ edition = "2021"
 itertools.workspace = true
 nom.workspace = true
 helpers.workspace = true
-glam.workspace = true
+nalgebra.workspace = true
 
 [dev-dependencies]
 criterion.workspace = true

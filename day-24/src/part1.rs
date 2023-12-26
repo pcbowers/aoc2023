@@ -1,5 +1,5 @@
-use glam::DVec2;
 use itertools::Itertools;
+use nalgebra::Vector2;
 use std::{f64::EPSILON, ops::Range};
 
 trait IntersectionChecks {
@@ -7,24 +7,21 @@ trait IntersectionChecks {
     fn is_in_bounds(&self, bounds: &Range<f64>) -> bool;
 }
 
-impl IntersectionChecks for DVec2 {
+impl IntersectionChecks for Vector2<f64> {
     fn is_after(&self, other: &Hailstone) -> bool {
-        ((*self - other.position) * other.velocity)
-            .cmpgt(DVec2::ZERO)
-            .all()
+        (self.x - other.position.x) * other.velocity.x > 0.0
+            && (self.y - other.position.y) * other.velocity.y > 0.0
     }
 
     fn is_in_bounds(&self, bounds: &Range<f64>) -> bool {
-        self.to_array()
-            .iter()
-            .all(|component| bounds.contains(component))
+        self.iter().all(|component| bounds.contains(component))
     }
 }
 
 #[derive(Debug, Clone, Copy)]
 struct Hailstone {
-    position: DVec2,
-    velocity: DVec2,
+    position: Vector2<f64>,
+    velocity: Vector2<f64>,
 }
 
 impl Hailstone {
@@ -99,13 +96,13 @@ impl Hailstone {
     While working on part2, I found it simpler to use glam for the calculations.
     With this in mind, I simplified part1 as well. The math is all the same though.
     */
-    fn find_intersection(&self, other: &Self) -> Option<DVec2> {
-        let cross_product = self.velocity.perp_dot(other.velocity);
+    fn find_intersection(&self, other: &Self) -> Option<Vector2<f64>> {
+        let cross_product = self.velocity.perp(&other.velocity);
 
         if cross_product.abs() < EPSILON {
             None
         } else {
-            let t = (other.position - self.position).perp_dot(other.velocity) / cross_product;
+            let t = (other.position - self.position).perp(&other.velocity) / cross_product;
             Some(self.position + self.velocity * t)
         }
     }
@@ -114,7 +111,7 @@ impl Hailstone {
         &self,
         other: &Self,
         bounds: &Range<f64>,
-    ) -> Option<DVec2> {
+    ) -> Option<Vector2<f64>> {
         let Some(intersection) = self.find_intersection(other) else {
             return None;
         };
@@ -130,8 +127,8 @@ impl Hailstone {
     }
 }
 
-impl From<(DVec2, DVec2)> for Hailstone {
-    fn from((position, velocity): (DVec2, DVec2)) -> Self {
+impl From<(Vector2<f64>, Vector2<f64>)> for Hailstone {
+    fn from((position, velocity): (Vector2<f64>, Vector2<f64>)) -> Self {
         Self { position, velocity }
     }
 }
@@ -151,13 +148,13 @@ mod parser {
         map(complete::i64, |number| number as f64)(input)
     }
 
-    fn point(input: &str) -> IResult<&str, DVec2> {
+    fn point(input: &str) -> IResult<&str, Vector2<f64>> {
         map(
             tuple((
                 terminated(number, tag(", ")),
                 terminated(number, tuple((tag(", "), number))),
             )),
-            DVec2::from,
+            |(x, y)| Vector2::new(x, y),
         )(input)
     }
 
