@@ -9,15 +9,15 @@ trait IntersectionChecks {
 
 impl IntersectionChecks for DVec2 {
     fn is_after(&self, other: &Hailstone) -> bool {
-        (self.x - other.position.x) * other.velocity.x > 0.0
-            && (self.y - other.position.y) * other.velocity.y > 0.0
+        ((*self - other.position) * other.velocity)
+            .cmpgt(DVec2::ZERO)
+            .all()
     }
 
     fn is_in_bounds(&self, bounds: &Range<f64>) -> bool {
-        self.x >= bounds.start
-            && self.x < bounds.end
-            && self.y >= bounds.start
-            && self.y < bounds.end
+        self.to_array()
+            .iter()
+            .all(|component| bounds.contains(component))
     }
 }
 
