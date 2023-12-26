@@ -1,27 +1,29 @@
-use std::ops::Range;
-
 use itertools::Itertools;
+use std::{f64::EPSILON, ops::Range};
 
 #[derive(Debug, Clone, Copy)]
-struct Point(f64, f64, f64);
+struct Point {
+    x: f64,
+    y: f64,
+}
 
 impl Point {
     fn is_after(&self, other: &Hailstone) -> bool {
-        (self.0 - other.position.0) * other.velocity.0 > 0.0
-            && (self.1 - other.position.1) * other.velocity.1 > 0.0
+        (self.x - other.position.x) * other.velocity.x > 0.0
+            && (self.y - other.position.y) * other.velocity.y > 0.0
     }
 
     fn is_in_bounds(&self, bounds: &Range<f64>) -> bool {
-        self.0 >= bounds.start
-            && self.0 < bounds.end
-            && self.1 >= bounds.start
-            && self.1 < bounds.end
+        self.x >= bounds.start
+            && self.x < bounds.end
+            && self.y >= bounds.start
+            && self.y < bounds.end
     }
 }
 
 impl From<(f64, f64, f64)> for Point {
-    fn from((x, y, z): (f64, f64, f64)) -> Self {
-        Self(x, y, z)
+    fn from((x, y, _): (f64, f64, f64)) -> Self {
+        Self { x, y }
     }
 }
 
@@ -32,18 +34,87 @@ struct Hailstone {
 }
 
 impl Hailstone {
-    fn find_intersection(&self, other: &Self) -> Option<Point> {
-        let x_diff = other.position.0 - self.position.0;
-        let y_diff = other.position.1 - self.position.1;
-        let cross_product = self.velocity.0 * other.velocity.1 - self.velocity.1 * other.velocity.0;
+    /*
+    Let's talk math for a bit.
+    Here's the general formula for an intersection based on initial position and constant velocities:
 
-        if cross_product == 0.0 {
+    (x1, y1) + t * (vx1, vy1) = (x2, y2) + t * (vx2, vy2)
+
+    This can be expanded like so:
+
+    (x1 + t * vx1, y1 + t * vy1) = (x2 + t * vx2, y2 + t * vy2)
+
+    We can separate this into two equations, one for x and one for y:
+
+    x1 + t * vx1 = x2 + t * vx2
+    y1 + t * vy1 = y2 + t * vy2
+
+    Using either of these, we can solve for t:
+
+    t = (x2 - x1) / (vx1 - vx2)
+    t = (y2 - y1) / (vy1 - vy2)
+
+    Perfect! Once you get t just solve for x and y and you get your intersection!
+
+    One problem though: what about parallel lines? A line is parallel when the following is true:
+
+    vx1 - vx2 = 0
+    vy1 - vy2 = 0
+
+    Since this is possible, we have a problem: you can't divide by 0.
+    This means we have to check that both aren't 0.
+    If one is 0 and the other isn't, we have to use the non-0 component to solve for t.
+
+    This is rather annoying: we end up duplicating logic for each component to manage this.
+    Thankfully, the cross product can be used to help us here. For 2D space, this holds true:
+
+    given two vectors (a,b) and (c,d)
+    cross_product = a * d - b * c
+    cross_product = vx1 * vy2 - vy1 * vx2
+
+    If both components are parallel, the cross product is 0, now just one check!
+    Here's the cool part though, we can also calculate t using the cross product.
+    Let's start with some of the earlier formulas:
+
+    t = (x2 - x1) / (vx1 - vx2)
+    t = (y2 - y1) / (vy1 - vy2)
+
+    Let's simplify:
+
+    t = x_diff / (vx1 - vx2)
+    t = y_diff / (vy1 - vy2)
+
+    And we'll modify them slightly:
+
+    t = x_diff * vy2 / ((vx1 - vx2) * vy2)
+    t = y_diff * vx2 / ((vy1 - vy2) * vx2)
+
+    We can combine like so:
+
+    t = (x_diff * vy2 - y_diff * vx2) / (((vx1 - vx2) * vy2) - ((vy1 - vy2) * vx2))
+
+    Distribute the denominator like so:
+
+    t = (x_diff * vy2 - y_diff * vx2) / (vx1 * vy2 - vx2 * vy2 - vy1 * vx2 + vy2 * vx2)
+    t = (x_diff * vy2 - y_diff * vx2) / (vx1 * vy2 - vy1 * vx2)
+    t = (x_diff * vy2 - y_diff * vx2) / cross_product
+
+    And there we have it! We've got the cross product in the denominator.
+    This means we don't need to duplicate logic anymore
+    */
+    fn find_intersection(&self, other: &Self) -> Option<Point> {
+        let x_diff = other.position.x - self.position.x;
+        let y_diff = other.position.y - self.position.y;
+        let cross_product = self.velocity.x * other.velocity.y - self.velocity.y * other.velocity.x;
+
+        // Take into account floating point precision instead of checking for 0
+        if cross_product.abs() < EPSILON {
             None
         } else {
-            let t1 = (x_diff * other.velocity.1 - y_diff * other.velocity.0) / cross_product;
-            let intersection_x = self.position.0 + (self.velocity.0 * t1);
-            let intersection_y = self.position.1 + (self.velocity.1 * t1);
-            Some(Point(intersection_x, intersection_y, 0.0))
+            let t = (x_diff * other.velocity.y - y_diff * other.velocity.x) / cross_product;
+            let x = self.position.x + (self.velocity.x * t);
+            let y = self.position.y + (self.velocity.y * t);
+            Some(Point { x, y })
         }
     }
 
