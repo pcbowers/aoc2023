@@ -81,3 +81,11 @@ day_20_bench  fastest       │ slowest       │ median        │ mean        
 day_21_bench  fastest       │ slowest       │ median        │ mean          │ samples │ iters
 ├─ part1      8.089 ms      │ 9.295 ms      │ 8.588 ms      │ 8.515 ms      │ 100     │ 100
 ╰─ part2      29.72 µs      │ 68.4 µs       │ 30.18 µs      │ 31.38 µs      │ 100     │ 100
+
+day_22_bench  fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1      87.89 ms      │ 100.5 ms      │ 92.72 ms      │ 92.29 ms      │ 100     │ 100
+╰─ part2      107.7 ms      │ 119.7 ms      │ 114.3 ms      │ 113.9 ms      │ 100     │ 100
+
+day_23_bench  fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1      14.79 ms      │ 18.18 ms      │ 15.97 ms      │ 16.06 ms      │ 100     │ 100
+╰─ part2      (TOO SLOW TO BENCHMARK: Took 1hr, 31min)
