@@ -8,6 +8,7 @@ itertools.workspace = true
 nom.workspace = true
 helpers.workspace = true
 glam.workspace = true
+z3.workspace = true
 
 [dev-dependencies]
 criterion.workspace = true

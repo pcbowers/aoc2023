@@ -77,8 +77,6 @@ Considering only the X and Y axes, check all pairs of hailstones' future paths f
 
 Your puzzle answer was `28266`.
 
-The first half of this puzzle is complete! It provides one gold star: \*
-
 \--- Part Two ---
 ----------
 
@@ -121,8 +119,12 @@ So, at time `0`, the rock needs to be at X position `24`, Y position `13`, and Z
 
 Determine the exact position and velocity the rock needs to have at time `0` so that it perfectly collides with every hailstone. *What do you get if you add up the X, Y, and Z coordinates of that initial position?*
 
-Answer:
+Your puzzle answer was `786617045860267`.
 
-Although it hasn't changed, you can still [get your puzzle input](24/input).
+Both parts of this puzzle are complete! They provide two gold stars: \*\*
 
-You can also [Shareon [Twitter](https://twitter.com/intent/tweet?text=I%27ve+completed+Part+One+of+%22Never+Tell+Me+The+Odds%22+%2D+Day+24+%2D+Advent+of+Code+2023&url=https%3A%2F%2Fadventofcode%2Ecom%2F2023%2Fday%2F24&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+At this point, you should [return to your Advent calendar](/2023) and try another puzzle.
+
+If you still want to see it, you can [get your puzzle input](24/input).
+
+You can also [Shareon [Twitter](https://twitter.com/intent/tweet?text=I%27ve+completed+%22Never+Tell+Me+The+Odds%22+%2D+Day+24+%2D+Advent+of+Code+2023&url=https%3A%2F%2Fadventofcode%2Ecom%2F2023%2Fday%2F24&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.

@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install Z3
+        run: sudo apt-get install libz3-dev -y
+        continue-on-error: true
       - name: Set up cargo cache
         uses: actions/cache@v3
         continue-on-error: false

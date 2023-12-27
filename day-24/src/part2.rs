@@ -1,21 +1,17 @@
-#[derive(Debug, Clone, Copy)]
-struct Point(f64, f64, f64);
-
-impl From<(f64, f64, f64)> for Point {
-    fn from((x, y, z): (f64, f64, f64)) -> Self {
-        Self(x, y, z)
-    }
-}
+use glam::DVec3;
+use z3::{
+    ast::{Ast, Int},
+    Config, Context, SatResult, Solver,
+};
 
 #[derive(Debug, Clone, Copy)]
-#[allow(dead_code)]
 struct Hailstone {
-    position: Point,
-    velocity: Point,
+    position: DVec3,
+    velocity: DVec3,
 }
 
-impl From<(Point, Point)> for Hailstone {
-    fn from((position, velocity): (Point, Point)) -> Self {
+impl From<(DVec3, DVec3)> for Hailstone {
+    fn from((position, velocity): (DVec3, DVec3)) -> Self {
         Self { position, velocity }
     }
 }
@@ -35,14 +31,14 @@ mod parser {
         map(complete::i64, |number| number as f64)(input)
     }
 
-    fn point(input: &str) -> IResult<&str, Point> {
+    fn point(input: &str) -> IResult<&str, DVec3> {
         map(
             tuple((
                 terminated(number, tag(", ")),
                 terminated(number, tag(", ")),
                 number,
             )),
-            Point::from,
+            DVec3::from,
         )(input)
     }
 
@@ -58,9 +54,79 @@ mod parser {
 pub fn process(input: &str) -> String {
     let (_, hailstones) = parser::parse(input).expect("should parse");
 
-    dbg!(hailstones);
+    let cfg = Config::new();
+    let ctx = Context::new(&cfg);
+    let solver = Solver::new(&ctx);
 
-    todo!()
+    let initial_rock_x = Int::new_const(&ctx, "x");
+    let initial_rock_y = Int::new_const(&ctx, "y");
+    let initial_rock_z = Int::new_const(&ctx, "z");
+    let velocity_rock_x = Int::new_const(&ctx, "vx");
+    let velocity_rock_y = Int::new_const(&ctx, "vy");
+    let velocity_rock_z = Int::new_const(&ctx, "vz");
+
+    for (index, hailstone) in hailstones.into_iter().enumerate() {
+        let t = Int::new_const(&ctx, format!("t{index}"));
+
+        let hailstone_x = hailstone.position.x as i64 + &t * hailstone.velocity.x as i64;
+        let hailstone_y = hailstone.position.y as i64 + &t * hailstone.velocity.y as i64;
+        let hailstone_z = hailstone.position.z as i64 + &t * hailstone.velocity.z as i64;
+        let rock_x = &initial_rock_x + &t * &velocity_rock_x;
+        let rock_y = &initial_rock_y + &t * &velocity_rock_y;
+        let rock_z = &initial_rock_z + &t * &velocity_rock_z;
+
+        solver.assert(&t.ge(&Int::from_i64(&ctx, 0)));
+        solver.assert(&hailstone_x._eq(&rock_x));
+        solver.assert(&hailstone_y._eq(&rock_y));
+        solver.assert(&hailstone_z._eq(&rock_z));
+    }
+
+    let SatResult::Sat = solver.check() else {
+        unreachable!("Unsolvable!");
+    };
+
+    let model = solver.get_model().unwrap();
+
+    let rock = Hailstone {
+        position: DVec3::new(
+            model
+                .get_const_interp(&initial_rock_x)
+                .and_then(|ast| ast.as_i64().map(|n| n as f64))
+                .unwrap(),
+            model
+                .get_const_interp(&initial_rock_y)
+                .and_then(|ast| ast.as_i64().map(|n| n as f64))
+                .unwrap(),
+            model
+                .get_const_interp(&initial_rock_z)
+                .and_then(|ast| ast.as_i64().map(|n| n as f64))
+                .unwrap(),
+        ),
+        velocity: DVec3::new(
+            model
+                .get_const_interp(&velocity_rock_x)
+                .and_then(|ast| ast.as_i64().map(|n| n as f64))
+                .unwrap(),
+            model
+                .get_const_interp(&velocity_rock_y)
+                .and_then(|ast| ast.as_i64().map(|n| n as f64))
+                .unwrap(),
+            model
+                .get_const_interp(&velocity_rock_z)
+                .and_then(|ast| ast.as_i64().map(|n| n as f64))
+                .unwrap(),
+        ),
+    };
+
+    // dbg!(&rock);
+
+    (rock
+        .position
+        .to_array()
+        .into_iter()
+        .map(|n| n as isize)
+        .sum::<isize>())
+    .to_string()
 }
 
 #[cfg(test)]
