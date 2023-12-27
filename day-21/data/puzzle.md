@@ -102,8 +102,6 @@ Starting from the garden plot marked `S` on your map, *how many garden plots cou
 
 Your puzzle answer was `3751`.
 
-The first half of this puzzle is complete! It provides one gold star: \*
-
 \--- Part Two ---
 ----------
 
@@ -166,8 +164,12 @@ Here are the number of reachable garden plots in this new infinite version of th
 
 However, the step count the Elf needs is much larger! Starting from the garden plot marked `S` on your infinite map, *how many garden plots could the Elf reach in exactly `26501365` steps?*
 
-Answer:
+Your puzzle answer was `619407349431167`.
 
-Although it hasn't changed, you can still [get your puzzle input](21/input).
+Both parts of this puzzle are complete! They provide two gold stars: \*\*
 
-You can also [Shareon [Twitter](https://twitter.com/intent/tweet?text=I%27ve+completed+Part+One+of+%22Step+Counter%22+%2D+Day+21+%2D+Advent+of+Code+2023&url=https%3A%2F%2Fadventofcode%2Ecom%2F2023%2Fday%2F21&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+At this point, all that is left is for you to [admire your Advent calendar](/2023).
+
+If you still want to see it, you can [get your puzzle input](21/input).
+
+You can also [Shareon [Twitter](https://twitter.com/intent/tweet?text=I%27ve+completed+%22Step+Counter%22+%2D+Day+21+%2D+Advent+of+Code+2023&url=https%3A%2F%2Fadventofcode%2Ecom%2F2023%2Fday%2F21&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
